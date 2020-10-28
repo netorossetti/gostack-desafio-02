@@ -26,7 +26,7 @@ app.post("/repositories", (request, response) => {
     title,
     url, 
     techs,
-    like: 0
+    likes: 0,
   }
 
   repositories.push(repository)
@@ -36,45 +36,50 @@ app.post("/repositories", (request, response) => {
 
 app.put("/repositories/:id", (request, response) => {
   const { id } = request.params
+  const { title, url, techs } = request.body
+  
   const repositoryIndex = repositories.findIndex( repo => repo.id === id)
-  if( repositoryIndex < 0 ){
-    return response.status(400).json({erro: "Repository not found!"})
+
+  if( repositoryIndex === -1 ){
+    return response.status(400).json({erro: "Repository dos not exists!"})
   }
 
-  const { title, url, techs } = request.body
-  const repository = repositories[repositoryIndex]
-  repository.title = title
-  repository.url = url
-  repository.techs = techs
+  const repository = {
+    id,
+    title,
+    url, 
+    techs,
+    likes: repositories[repositoryIndex].likes,
+  };
+
   repositories[repositoryIndex] = repository
-  return response.status(202).json(repository)
+
+  return response.json(repository)
 });
 
 app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params
   const repositoryIndex = repositories.findIndex( repo => repo.id === id)
-  if( repositoryIndex < 0 ){
-    return response.status(400).json({erro: "Repository not found!"})
+  if( repositoryIndex === -1 ){
+    return response.status(400).json({erro: "Repository dos not exists!"})
   }
 
-  repositories.splice(repositoryIndex)
+  repositories.splice(repositoryIndex, 1)
   return response.status(204).send()
 
 });
 
 app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params
+
   const repositoryIndex = repositories.findIndex( repo => repo.id === id)
-  if( repositoryIndex < 0 ){
-    return response.status(400).json({erro: "Repository not found!"})
+  if( repositoryIndex === -1 ){
+    return response.status(400).json({erro: "Repository dos not exists!"})
   }
 
-  const repository = repositories[repositoryIndex]
-  repository.like++
-  repositories[repositoryIndex] = repository
+  repositories[repositoryIndex].likes ++
 
-
-  return response.status(204).send()
+  return response.json(repositories[repositoryIndex])
 });
 
 module.exports = app;
