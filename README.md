@@ -1,5 +1,4 @@
-# GoStack - Desafio#01
-Desafio: Conceitos do Node.js
+# Desafio: Conceitos do Node.js
 Nesse desafio, você deve criar uma aplicação para treinar o que você aprendeu até agora no Node.js!
 
 ## 🚀 Sobre o desafio
